@@ -18,17 +18,22 @@ jobs:
       with:
         node-version: ${{ matrix.node_version }}
 
-    - name: Install packages
+    - name: Install
       run: npm install
 
-    - name: Run build
+    - name: Build
       run: npm run build
       
-    - name: removing ./build folder
+    - name: Clean
       run:  rm -rf ./docs
       
-    - name: Moving build to docs directory
+    - name: Copy
       run: mv ./build ./docs
       
-    - name: publish a new commit
-      run: git add * && git commit -m "deploy" && git push
+    - name: Deploy
+      run: |
+        git config --local user.email "$(git log --format='%ae' HEAD^!)"
+        git config --local user.name "$(git log --format='%an' HEAD^!)"
+        git add *
+        git commit -m "deploy"
+        git push
